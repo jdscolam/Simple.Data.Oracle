@@ -13,7 +13,6 @@ namespace Simple.Data.Oracle
     internal class SqlReflection
     {
         private readonly OracleConnectionProvider _provider;
-        private readonly string _schema;
         private readonly Task _buildData;
         
         private List<Table> _tables;
@@ -26,7 +25,6 @@ namespace Simple.Data.Oracle
         public SqlReflection(OracleConnectionProvider provider)
         {
             _provider = provider;
-            _schema = ConfigurationManager.AppSettings.AllKeys.Contains("Simple.Data.Oracle.Schema") ? ConfigurationManager.AppSettings["Simple.Data.Oracle.Schema"] : provider.UserOfConnection;
             _buildData = new Task(BuildData);
             _buildData.Start();
         }
@@ -87,7 +85,7 @@ namespace Simple.Data.Oracle
 
         public string Schema
         {
-            get { return _schema; }
+            get { return _provider.Schema ?? (ConfigurationManager.AppSettings.AllKeys.Contains("Simple.Data.Oracle.Schema") ? ConfigurationManager.AppSettings["Simple.Data.Oracle.Schema"] : _provider.UserOfConnection); }
         }
 
         private void BuildData()

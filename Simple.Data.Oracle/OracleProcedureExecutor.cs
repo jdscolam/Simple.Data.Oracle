@@ -10,7 +10,7 @@ using ResultSet = System.Collections.Generic.IEnumerable<System.Collections.Gene
 #if DEVART
 using Devart.Data.Oracle;
 #else
-using Oracle.DataAccess.Client;
+using Oracle.ManagedDataAccess.Client;
 #endif
 
 namespace Simple.Data.Oracle

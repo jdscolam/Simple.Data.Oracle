@@ -5,7 +5,7 @@ using Simple.Data.Ado.Schema;
 #if DEVART
 using Devart.Data.Oracle;
 #else
-using Oracle.DataAccess.Client;
+using Oracle.ManagedDataAccess.Client;
 #endif
 
 namespace Simple.Data.Oracle
@@ -13,14 +13,19 @@ namespace Simple.Data.Oracle
     #if DEVART 
     [Export("Devart.Data.Oracle", typeof(IConnectionProvider))]
     #else
-    [Export("Oracle.DataAccess.Client", typeof(IConnectionProvider))]
+    [Export("Oracle.ManagedDataAccess.Client", typeof(IConnectionProvider))]
     #endif
-    internal class OracleConnectionProvider : IConnectionProvider
+    public class OracleConnectionProvider : ISchemaConnectionProvider
     {
 
         public void SetConnectionString(string connectionString)
         {
             ConnectionString = connectionString;
+        }
+
+        public void SetSchema(string schema)
+        {
+            Schema = schema;
         }
 
         IDbConnection IConnectionProvider.CreateConnection()
@@ -31,6 +36,13 @@ namespace Simple.Data.Oracle
         public ISchemaProvider GetSchemaProvider()
         {
             return new OracleSchemaProvider(this);
+        }
+
+        public string Schema { get; set; }
+
+        public string ConnectionProviderKey
+        {
+            get { return ConnectionString + " " + Schema; }
         }
 
         public string GetIdentityFunction()

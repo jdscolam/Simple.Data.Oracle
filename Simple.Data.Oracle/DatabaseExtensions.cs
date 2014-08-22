@@ -7,7 +7,7 @@ using System.Linq;
 using Devart.Data.Oracle;
 #endif
 #if !DEVART
-using Oracle.DataAccess.Client;
+using Oracle.ManagedDataAccess.Client;
 #endif
 
 
