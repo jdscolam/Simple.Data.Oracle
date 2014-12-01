@@ -19,7 +19,7 @@ namespace Simple.Data.Oracle
             var table = s.FindTable(tableName);
             
             var tuples = InitializeInsertion(table);
-            foreach (var d in data)
+            foreach (var d in data.Where(x => tuples.ContainsKey(x.Key.Homogenize())))
                 tuples[d.Key.Homogenize()].InsertedValue = d.Value;
 
             Func<IDbCommand> command =
@@ -149,7 +149,7 @@ namespace Simple.Data.Oracle
                 get { return _insertedValue; }
                 set
                 {
-                    ToBeInserted = true;
+                    ToBeInserted = !Column.IsIdentity;
                     _insertedValue = value;
                     if (!(value is Sequence)) 
                         return;

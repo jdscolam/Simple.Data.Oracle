@@ -7,7 +7,7 @@ namespace Simple.Data.Oracle
 {
     public class DbDictionary : IDictionary<string, object>
     {
-        private readonly IDictionary<string,object> _dict = new Dictionary<string, object>();
+        private readonly IDictionary<string, object> _dict = new Dictionary<string, object>(HomogenizedEqualityComparer.DefaultInstance);
 
         public object this[string key]
         {

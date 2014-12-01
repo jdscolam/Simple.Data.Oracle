@@ -16,7 +16,7 @@ namespace Simple.Data.Oracle
         private readonly Task _buildData;
         
         private List<Table> _tables;
-        private List<Tuple<string,string,DbType,int>> _columnsFlat;
+        private List<Tuple<string,string,DbType,int, string>> _columnsFlat;
         private List<Tuple<string, string>> _pks;
         private IEnumerable<ForeignKey> _fks;
         private List<Procedure> _procs;
@@ -47,7 +47,7 @@ namespace Simple.Data.Oracle
             }
         }
 
-        public IEnumerable<Tuple<string,string,DbType,int>> Columns
+        public IEnumerable<Tuple<string,string,DbType,int, string>> Columns
         {
             get
             {
@@ -120,7 +120,8 @@ namespace Simple.Data.Oracle
                     r.GetString(0), 
                     r.GetString(1), 
                     DbTypeConverter.FromDataType(r.GetString(2)),
-                    Convert.ToInt32(r.GetDecimal(3))))
+                    Convert.ToInt32(r.GetDecimal(3)),
+                    r.GetString(4)))
                 .ToList();
             if (!Schema.Equals(_provider.UserOfConnection, StringComparison.InvariantCultureIgnoreCase))
                 _columnsFlat.AddRange(_provider.ReaderFrom(SqlLoader.SchemaColumns,
@@ -131,7 +132,7 @@ namespace Simple.Data.Oracle
                                         c.Parameters.Add("3", _provider.UserOfConnection.ToUpperInvariant());
                                         c.Parameters.Add("4", Schema.ToUpperInvariant());
                                     },
-                                    r => Tuple.Create(r.GetString(0), r.GetString(1), DbTypeConverter.FromDataType(r.GetString(2)), Convert.ToInt32(r.GetDecimal(3)))).ToList());
+                                    r => Tuple.Create(r.GetString(0), r.GetString(1), DbTypeConverter.FromDataType(r.GetString(2)), Convert.ToInt32(r.GetDecimal(3)), r.GetString(4))).ToList());
         }
 
         private void CreateTables()
